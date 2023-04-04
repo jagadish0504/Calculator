@@ -19,15 +19,17 @@ jobs:
         cache: maven
         
     - name: Build with Maven
-      run: |
-        mvn -B package --file pom.xml
-        mkdir staging && cp target/*.jar staging
+      run: mvn -B package --file pom.xml
         
-    - name: Upload-Artifact
-      uses: actions/upload-artifact@v3
+    - name: Build & push Docker image
+      uses: mr-smithers-excellent/docker-build-push@v6
       with:
-        name: GitHub-Actions-Artifact
-        path: staging
+        image: jagadish0504/caliculator-repo
+        tags: latest
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
       
     
     
